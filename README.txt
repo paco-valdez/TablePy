@@ -9,7 +9,7 @@ indexes for faster direct lookup for a row by column value.
 
 To create a Table::
     
-    from tablepy import Table
+    from tablepy.table import Table
     table = Table(['ID','name'])
     table.append({'ID':2,'name':'a'})
     table.append({'ID':1,'name':'b'})
