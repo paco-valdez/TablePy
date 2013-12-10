@@ -1,12 +1,8 @@
 TablePy
-=======
-
-Data Structure for Maintaing Tabular Data in Memory.
-
-
 ===========
-TablePy
-===========
+_____________
+A Data Structure for Maintaing Tabular Data in Memory.
+_____________
 
 It was created as an exercise but it may be helpful to others, 
 It's not recommended to use it in a production environment.
