@@ -3,23 +3,24 @@ import copy
 class Table(object):
     '''
         TODO:
-            - Group By (a.k.a. aggregate funcs)
             - In place row delete.
+            - create tableviews with only the specified columns (a.k.a. Project)
             - unit tests
             - Make it a python package
     '''
-    def __init__(self, schema = [], data=None):
+    def __init__(self, schema = [], data=None, indexed=True):
         self.__rows =  []# list of row objects (dicts)
         self.indexes = {} # for faster direct lookup for row by column
         if not schema and data:
-            schema = data[0].keys()  
-        for col in schema:
-            self.indexes[col] = {}
-        if data:
-            self.__rows = data
-            for row in data:
-                for k in row.keys():
-                    self.indexes[k][row[k]] = row
+            schema = data[0].keys()
+        if indexed:
+            for col in schema:
+                self.indexes[col] = {}
+            if data:
+                self.__rows = data
+                for row in data:
+                    for k in row.keys():
+                        self.indexes[k][row[k]] = row
             
     def __iter__(self):
         return iter(self.__rows)
@@ -150,4 +151,50 @@ class Table(object):
         return [row[col] for row in self]            
         
     def filter(self,func,keys=[]):
-        return Table(schema=self.getSchema(), data=[row for row in self if func(*[row[k] for k in keys])])
+        return TableView(schema=self.getSchema(), data=[row for row in self if func(*[row[k] for k in keys])], indexed = True)
+    
+    def addIndex(self,cols):
+        key = tuple(cols)
+        if len(key) == 1:
+            key = key[0]
+        self.indexes[key] = {}
+        for row in self:
+            value = None
+            if isinstance(key,str):
+                value = row[key]
+            else:
+                value = tuple([row[k] for k in key])
+            tmp = self.indexes[key].get(value,[])
+            tmp.append(row)
+            self.indexes[key][value] = tmp
+
+    def groupBy(self,cols,func,args):
+        key = tuple(cols)
+        if len(key) == 1:
+            key = key[0]
+        if key not in self.indexes:
+            self.addIndex(cols)
+        data = []
+        newschema = copy.deepcopy(cols)
+        newschema.append('__result')
+        for value,rows in self.indexes[key].iteritems():
+            func_args = [[row[col] for col in args] for row in rows]
+            result = []
+            if isinstance(value,tuple):
+                result = list(value)
+            else:
+                result = [value]
+            result.append(func(func_args))
+            data.append(dict(zip(newschema, result)))
+        return TableView(schema=newschema, data=data, indexed = True)
+        
+class TableView(Table):
+    '''
+    Unmaterialized view of a table, altering the content of a view 
+    will also alter the content in the original table, use copy.deepcopy
+    to create a new copy from a table view.
+    
+    '''
+    
+    def __init__(self, schema = [], data=None, indexed = False):
+        super(self.__class__, self).__init__(schema = schema , data=data, indexed=indexed)
