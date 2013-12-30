@@ -75,10 +75,19 @@ And of course, you can sort(cmp,key,reverse) it **in place**:
     table.sort(key=lambda x:(x['constant'],x['ID']))
     print table
 
+It also supports group by:
+
+    table.append({'new name': 4, 'constant': 4, 'name': 'a', 'age': 5, 'ID': 2, 'another column!': 'x'})
+    table.append({'new name': 5, 'constant': 4, 'name': 'a', 'age': 6, 'ID': 2, 'another column!': 'x'})
+    table.append({'new name': 6, 'constant': 4, 'name': 'a', 'age': 8, 'ID': 2, 'another column!': 'x'})
+    print table
+    print table.groupBy(['new name'], lambda args: float(sum([i[0] for i in args]))/len(args),['age'])
+    print table.groupBy(['new name', 'constant' ], lambda args: sum([i[0]+i[1] for i in args]),['age','constant'])
+
     
 At last but no least, you can filter it like this (returns a new table):
 
-    tableFiltered = table.filter(lambda age: age>=2,['age'])
+    tableFiltered = table.filter(lambda age: age>2,['age'])
     print tableFiltered
     tableFiltered2 = table.filter(lambda name,constant: name == 'a' and constant==3 ,['name','constant'])
     print tableFiltered2
