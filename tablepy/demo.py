@@ -82,7 +82,7 @@ def main():
     
     table3 = Table(['name','age'])
     table3.append({'name': 'a','age':3})
-    table3.append({'name': 'a','age':2})
+    table3.append({'name': 'c','age':2})
     table3.append({'name': 'b','age':1})
     table.hConcat(table3, join='name')
     print table,'\n'
@@ -98,16 +98,31 @@ def main():
     table.sort(key=lambda x:(x['constant'],x['ID']))
     print table,'\n'
     
-    print """ At last but no least, you can filter it like this (returns a new table):
-    tableFiltered = table.filter(lambda age: age>=2,['age'])
+    print """ You can filter it like this (returns a new table):
+    tableFiltered = table.filter(lambda age: age>2,['age'])
     print tableFiltered
     tableFiltered2 = table.filter(lambda name,constant: name == 'a' and constant==3 ,['name','constant'])
     print tableFiltered2
     """
-    tableFiltered = table.filter(lambda age: age>=2,['age'])
+    tableFiltered = table.filter(lambda age: age>2,['age'])
     print tableFiltered
     tableFiltered2 = table.filter(lambda name,constant: name == 'a' and constant==3 ,['name','constant'])
     print tableFiltered2,'\n'
     
+    print """ It also supports group by:
+    table.append({'new name': 4, 'constant': 4, 'name': 'a', 'age': 5, 'ID': 2, 'another column!': 'x'})
+    table.append({'new name': 5, 'constant': 4, 'name': 'a', 'age': 6, 'ID': 2, 'another column!': 'x'})
+    table.append({'new name': 6, 'constant': 4, 'name': 'a', 'age': 8, 'ID': 2, 'another column!': 'x'})
+    print table
+    print table.groupBy(['new name'], lambda args: float(sum([i[0] for i in args]))/len(args),['age'])
+    print table.groupBy(['new name', 'constant' ], lambda args: sum([i[0]+i[1] for i in args]),['age','constant'])
+    """
+    table.append({'new name': 4, 'constant': 4, 'name': 'a', 'age': 5, 'ID': 2, 'another column!': 'x'})
+    table.append({'new name': 5, 'constant': 4, 'name': 'a', 'age': 6, 'ID': 2, 'another column!': 'x'})
+    table.append({'new name': 6, 'constant': 4, 'name': 'a', 'age': 8, 'ID': 2, 'another column!': 'x'})
+    print table
+    print table.groupBy(['new name'], lambda args: float(sum([i[0] for i in args]))/len(args),['age'])
+    print table.groupBy(['new name', 'constant' ], lambda args: sum([i[0]+i[1] for i in args]),['age','constant'])
+
 if __name__ == '__main__':
     main()
