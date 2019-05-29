@@ -4,8 +4,6 @@ _____________
 A Data Structure for Maintaing Tabular Data in Memory.
 _____________
 
-It was created as an exercise but it may be helpful to others, 
-It's not recommended to use it in a production environment.
 The table is implemented as a list of dicts, it also have value 
 indexes for faster direct lookup for a row by column value.
 
