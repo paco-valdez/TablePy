@@ -1,7 +1,7 @@
 TablePy
 ===========
 _____________
-A Data Structure for Maintaing Tabular Data in Memory.
+A Data Structure for handling Tabular Data in Memory.
 _____________
 
 The table is implemented as a list of dicts, it also have value 
