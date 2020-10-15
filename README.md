@@ -5,9 +5,9 @@ A Data Structure for handling Tabular Data in Memory.
 _____________
 
 The table is implemented as a list of dicts, it also have value 
-indexes for faster direct lookup for a row by column value.
+indexes for faster direct row lookup by column value.
 
-To create a Table:
+Create a Table:
     
     from tablepy.table import Table
     table = Table(['ID','name'])
@@ -22,13 +22,13 @@ It supports len, iteration and indexing:
     print iter(table)
     print table[0]
     
-We can add a column with a constant value:
+Add a column with a constant value:
 
     table.addColumn('constant',3)
     print table
     
     
-Also we can add a column with a interable arg (must be the same size as our table):
+Add a column with an interable arg (must be the same size as our table):
     
     table.addColumn('iterable arg',[4,5])
     print table
@@ -43,7 +43,8 @@ convert a column to List, and rename columns!:
     print table,'\n'
     
 
-It supports vertical concatenation (same schema!), \nand horizontal concatenation with SQL-like joins!:
+It supports vertical concatenation (same schema!), 
+and horizontal concatenation with SQL-like joins!:
 
     table2 = Table(['ID','name','constant','new name'])
     table2.append({'new name': 6, 'constant': 3, 'ID': 3, 'name': 'c'})
@@ -66,7 +67,7 @@ It supports vertical concatenation (same schema!), \nand horizontal concatenatio
     
 
 
-And of course, you can sort(cmp,key,reverse) it **in place**:
+sort(cmp,key,reverse) **in place**:
 
     table.sort(key=lambda x:x['age'],reverse =True)
     print table
